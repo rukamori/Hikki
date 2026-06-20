@@ -64,12 +64,48 @@ jobs:
           find app/build/outputs/apk -maxdepth 6 -type d -print || true
           exit 1
 
+      - name: Resolve signing key alias
+        id: signing_alias
+        shell: bash
+        env:
+          KEYSTORE: ${{ secrets.KEYSTORE }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          KEYSTORE_FILE="$RUNNER_TEMP/release.keystore"
+          printf '%s' "$KEYSTORE" | base64 --decode > "$KEYSTORE_FILE"
+
+          LISTING="$(keytool -list -v -keystore "$KEYSTORE_FILE" -storepass "$KEYSTORE_PASSWORD" 2>/dev/null)"
+          PRIVATE_ALIASES="$(
+            printf '%s\n' "$LISTING" |
+              awk '
+                /^Alias name: / { alias = substr($0, 13) }
+                /^Entry type: PrivateKeyEntry/ { print alias }
+              '
+          )"
+
+          if [ -z "$PRIVATE_ALIASES" ]; then
+            echo "No PrivateKeyEntry was found in the signing keystore."
+            exit 1
+          fi
+
+          if printf '%s\n' "$PRIVATE_ALIASES" | grep -Fxq "$KEY_ALIAS"; then
+            RESOLVED_ALIAS="$KEY_ALIAS"
+          else
+            RESOLVED_ALIAS="$(printf '%s\n' "$PRIVATE_ALIASES" | head -n 1)"
+            echo "Configured KEY_ALIAS does not reference a PrivateKeyEntry. Using the first private key alias from the keystore."
+          fi
+
+          echo "::add-mask::$RESOLVED_ALIAS"
+          echo "key_alias=$RESOLVED_ALIAS" >> "$GITHUB_OUTPUT"
+
       - name: Sign APK
         uses: ilharp/sign-android-release@v2.0.0
         with:
           releaseDir: ${{ steps.release_dir.outputs.release_dir }}/
           signingKey: ${{ secrets.KEYSTORE }}
-          keyAlias: ${{ secrets.KEY_ALIAS }}
+          keyAlias: ${{ steps.signing_alias.outputs.key_alias }}
           keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
           buildToolsVersion: 35.0.0

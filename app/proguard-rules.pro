@@ -1,0 +1,1 @@
+-keep class moe.rukamori.hikki.** { *; }

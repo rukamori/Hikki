@@ -14,9 +14,9 @@
 </p>
 
 <p align=center>
-<image src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshort_1.jpg" height="512"/>
-<image src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshort_2.jpg" height="512"/>
-<image src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshort_3.jpg" height="512"/>
+<image src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg" height="512"/>
+<image src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_2.jpg" height="512"/>
+<image src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_3.jpg" height="512"/>
 
 ---
 

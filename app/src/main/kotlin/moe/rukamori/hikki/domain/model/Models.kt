@@ -10,7 +10,7 @@ enum class NoteLifecycle {
     Trashed,
 }
 
-enum class NoteSort(@StringRes val labelRes: Int) {
+enum class NoteSort(@param:StringRes val labelRes: Int) {
     Updated(R.string.sort_updated),
     Created(R.string.sort_created),
     Title(R.string.sort_title),
@@ -18,18 +18,18 @@ enum class NoteSort(@StringRes val labelRes: Int) {
     Favorite(R.string.sort_favorite),
 }
 
-enum class DisplayMode(@StringRes val labelRes: Int) {
+enum class DisplayMode(@param:StringRes val labelRes: Int) {
     List(R.string.display_list),
     Grid(R.string.display_grid),
 }
 
-enum class EditorMode(@StringRes val labelRes: Int) {
+enum class EditorMode(@param:StringRes val labelRes: Int) {
     Edit(R.string.editor_mode_edit),
     Split(R.string.editor_mode_split),
     Preview(R.string.editor_mode_preview),
 }
 
-enum class ThemeMode(@StringRes val labelRes: Int) {
+enum class ThemeMode(@param:StringRes val labelRes: Int) {
     System(R.string.theme_system),
     Light(R.string.theme_light),
     Dark(R.string.theme_dark),
@@ -98,5 +98,5 @@ sealed interface ScreenState<out T> {
     data object Loading : ScreenState<Nothing>
     data class Success<T>(val data: T) : ScreenState<T>
     data object Empty : ScreenState<Nothing>
-    data class Error(@StringRes val messageRes: Int) : ScreenState<Nothing>
+    data class Error(@param:StringRes val messageRes: Int) : ScreenState<Nothing>
 }

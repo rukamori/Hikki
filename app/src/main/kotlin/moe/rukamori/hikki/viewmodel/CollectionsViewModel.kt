@@ -80,5 +80,5 @@ class CollectionsViewModel
     }
 
 sealed interface CollectionsEvent {
-    data class Message(@StringRes val messageRes: Int) : CollectionsEvent
+    data class Message(@param:StringRes val messageRes: Int) : CollectionsEvent
 }

@@ -82,5 +82,5 @@ abstract class LifecycleNotesViewModel(
 }
 
 sealed interface LifecycleNotesEvent {
-    data class Message(@StringRes val messageRes: Int) : LifecycleNotesEvent
+    data class Message(@param:StringRes val messageRes: Int) : LifecycleNotesEvent
 }

@@ -303,8 +303,8 @@ class NoteEditorViewModel
     }
 
 sealed interface EditorEvent {
-    data class Message(@StringRes val messageRes: Int) : EditorEvent
-    data class Close(@StringRes val messageRes: Int) : EditorEvent
+    data class Message(@param:StringRes val messageRes: Int) : EditorEvent
+    data class Close(@param:StringRes val messageRes: Int) : EditorEvent
 }
 
 enum class MarkdownFormat {

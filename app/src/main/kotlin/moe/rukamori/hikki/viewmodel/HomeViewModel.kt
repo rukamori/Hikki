@@ -132,5 +132,5 @@ class HomeViewModel
 
 sealed interface HomeEvent {
     data class OpenEditor(val noteId: Long) : HomeEvent
-    data class Message(@StringRes val messageRes: Int) : HomeEvent
+    data class Message(@param:StringRes val messageRes: Int) : HomeEvent
 }

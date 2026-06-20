@@ -20,9 +20,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import moe.rukamori.hikki.R
+import moe.rukamori.hikki.domain.model.Category
 import moe.rukamori.hikki.domain.model.EditorMode
+import moe.rukamori.hikki.domain.model.Folder
 import moe.rukamori.hikki.domain.model.Note
 import moe.rukamori.hikki.domain.model.ScreenState
+import moe.rukamori.hikki.domain.model.Tag
 import moe.rukamori.hikki.domain.usecase.NoteUseCases
 import moe.rukamori.hikki.domain.usecase.SettingsUseCases
 import moe.rukamori.hikki.ui.model.NoteEditorUiModel
@@ -52,13 +55,23 @@ class NoteEditorViewModel
 
         val state: StateFlow<ScreenState<NoteEditorUiModel>> =
             combine(
-                noteUseCases.observeNote(noteId),
-                noteUseCases.observeFolders(),
-                noteUseCases.observeCategories(),
-                noteUseCases.observeTags(),
+                combine(
+                    noteUseCases.observeNote(noteId),
+                    noteUseCases.observeFolders(),
+                    noteUseCases.observeCategories(),
+                    noteUseCases.observeTags(),
+                ) { note, folders, categories, tags ->
+                    NoteEditorSources(
+                        note = note,
+                        folders = folders,
+                        categories = categories,
+                        tags = tags,
+                    )
+                },
                 settingsUseCases.settings,
                 editorDraft,
-            ) { note, folders, categories, tags, settings, draft ->
+            ) { sources, settings, _ ->
+                val note = sources.note
                 if (note == null) {
                     return@combine ScreenState.Error(R.string.error_note_missing)
                 }
@@ -71,9 +84,9 @@ class NoteEditorViewModel
                         title = current.title,
                         content = current.content,
                         markdown = current.content.text,
-                        folders = folders,
-                        categories = categories,
-                        tags = tags,
+                        folders = sources.folders,
+                        categories = sources.categories,
+                        tags = sources.tags,
                         selectedFolderId = current.folderId,
                         selectedCategoryId = current.categoryId,
                         selectedTagIds = current.tagIds,
@@ -329,6 +342,13 @@ private data class TextSnapshot(
     val text: String,
     val selectionStart: Int,
     val selectionEnd: Int,
+)
+
+private data class NoteEditorSources(
+    val note: Note?,
+    val folders: List<Folder>,
+    val categories: List<Category>,
+    val tags: List<Tag>,
 )
 
 private fun MarkdownFormat.apply(value: TextFieldValue): TextFieldValue {

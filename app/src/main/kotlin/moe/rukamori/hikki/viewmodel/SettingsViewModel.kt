@@ -27,7 +27,10 @@ class SettingsViewModel
     ) : ViewModel() {
         val state: StateFlow<ScreenState<SettingsUiModel>> =
             settingsUseCases.settings
-                .map { ScreenState.Success(SettingsUiModel(it)) }
+                .map {
+                    val success: ScreenState<SettingsUiModel> = ScreenState.Success(SettingsUiModel(it))
+                    success
+                }
                 .catch { emit(ScreenState.Error(R.string.error_settings_load)) }
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ScreenState.Loading)
 

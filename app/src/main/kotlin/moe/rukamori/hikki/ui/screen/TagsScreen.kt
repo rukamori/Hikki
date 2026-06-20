@@ -8,9 +8,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Label
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,7 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import moe.rukamori.hikki.R
 import moe.rukamori.hikki.ui.component.CollectionDialog
@@ -48,7 +48,7 @@ fun TagsScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = stringResource(R.string.back),
                         )
                     }
@@ -83,7 +83,7 @@ fun TagsScreen(
                 items(model.tags, key = { it.id }, contentType = { "tag" }) { tag ->
                     ListItem(
                         headlineContent = { Text(tag.name) },
-                        leadingContent = { Icon(Icons.Outlined.Label, contentDescription = null) },
+                        leadingContent = { Icon(Icons.AutoMirrored.Outlined.Label, contentDescription = null) },
                         trailingContent = {
                             IconButton(onClick = { viewModel.deleteTag(tag.id) }) {
                                 Icon(

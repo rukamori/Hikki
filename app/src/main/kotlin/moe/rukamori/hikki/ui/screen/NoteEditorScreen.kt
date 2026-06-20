@@ -15,13 +15,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FormatBold
 import androidx.compose.material.icons.outlined.FormatItalic
-import androidx.compose.material.icons.outlined.FormatListBulleted
+import androidx.compose.material.icons.automirrored.outlined.FormatListBulleted
 import androidx.compose.material.icons.outlined.FormatListNumbered
 import androidx.compose.material.icons.outlined.FormatQuote
 import androidx.compose.material.icons.outlined.HorizontalRule
@@ -29,13 +29,13 @@ import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Preview
 import androidx.compose.material.icons.outlined.PushPin
-import androidx.compose.material.icons.outlined.Redo
+import androidx.compose.material.icons.automirrored.outlined.Redo
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material.icons.outlined.StrikethroughS
 import androidx.compose.material.icons.outlined.TableChart
 import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material.icons.outlined.Title
-import androidx.compose.material.icons.outlined.Undo
+import androidx.compose.material.icons.automirrored.outlined.Undo
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -68,7 +68,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import moe.rukamori.hikki.R
 import moe.rukamori.hikki.domain.model.EditorMode
@@ -131,7 +131,7 @@ fun NoteEditorScreen(
                         onBack()
                     }) {
                         Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = stringResource(R.string.back),
                         )
                     }
@@ -435,8 +435,8 @@ private fun FormattingToolbar(
                 .horizontalScroll(scrollState)
                 .padding(horizontal = MdSpacing.xs),
     ) {
-        ToolbarButton(Icons.Outlined.Undo, R.string.undo, enabled = canUndo, onClick = onUndo)
-        ToolbarButton(Icons.Outlined.Redo, R.string.redo, enabled = canRedo, onClick = onRedo)
+        ToolbarButton(Icons.AutoMirrored.Outlined.Undo, R.string.undo, enabled = canUndo, onClick = onUndo)
+        ToolbarButton(Icons.AutoMirrored.Outlined.Redo, R.string.redo, enabled = canRedo, onClick = onRedo)
         ToolbarButton(Icons.Outlined.Title, R.string.heading) { onFormat(MarkdownFormat.Heading) }
         ToolbarButton(Icons.Outlined.FormatBold, R.string.bold) { onFormat(MarkdownFormat.Bold) }
         ToolbarButton(Icons.Outlined.FormatItalic, R.string.italic) { onFormat(MarkdownFormat.Italic) }
@@ -444,7 +444,7 @@ private fun FormattingToolbar(
         ToolbarButton(Icons.Outlined.Code, R.string.inline_code) { onFormat(MarkdownFormat.InlineCode) }
         ToolbarButton(Icons.Outlined.Code, R.string.code_block) { onFormat(MarkdownFormat.CodeBlock) }
         ToolbarButton(Icons.Outlined.FormatQuote, R.string.quote) { onFormat(MarkdownFormat.Quote) }
-        ToolbarButton(Icons.Outlined.FormatListBulleted, R.string.bullet_list) { onFormat(MarkdownFormat.BulletList) }
+        ToolbarButton(Icons.AutoMirrored.Outlined.FormatListBulleted, R.string.bullet_list) { onFormat(MarkdownFormat.BulletList) }
         ToolbarButton(Icons.Outlined.FormatListNumbered, R.string.ordered_list) { onFormat(MarkdownFormat.OrderedList) }
         ToolbarButton(Icons.Outlined.TaskAlt, R.string.task_list) { onFormat(MarkdownFormat.TaskList) }
         ToolbarButton(Icons.Outlined.Link, R.string.link) { onFormat(MarkdownFormat.Link) }

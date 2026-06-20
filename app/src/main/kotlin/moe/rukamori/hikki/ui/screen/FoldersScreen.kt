@@ -11,8 +11,8 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Folder
-import androidx.compose.material.icons.outlined.Label
-import androidx.compose.material.icons.outlined.NavigateNext
+import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.material.icons.automirrored.outlined.NavigateNext
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,7 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import moe.rukamori.hikki.R
 import moe.rukamori.hikki.domain.model.ScreenState
@@ -145,8 +145,8 @@ fun FoldersScreen(
                     item(contentType = "tags_link") {
                         ListItem(
                             headlineContent = { Text(stringResource(R.string.manage_tags)) },
-                            leadingContent = { Icon(Icons.Outlined.Label, contentDescription = null) },
-                            trailingContent = { Icon(Icons.Outlined.NavigateNext, contentDescription = null) },
+                            leadingContent = { Icon(Icons.AutoMirrored.Outlined.Label, contentDescription = null) },
+                            trailingContent = { Icon(Icons.AutoMirrored.Outlined.NavigateNext, contentDescription = null) },
                             modifier = Modifier.clickableListItem(onOpenTags),
                         )
                     }

@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Description
-import androidx.compose.material.icons.outlined.Notes
+import androidx.compose.material.icons.automirrored.outlined.Notes
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,7 +32,7 @@ fun AboutScreen(onBack: () -> Unit) {
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = stringResource(R.string.back),
                         )
                     }
@@ -54,7 +54,7 @@ fun AboutScreen(onBack: () -> Unit) {
                         PreferenceRow(
                             headlineContent = { Text(stringResource(R.string.app_name)) },
                             supportingContent = { Text(stringResource(R.string.about_hikki_summary)) },
-                            leadingContent = { Icon(Icons.Outlined.Notes, contentDescription = null) },
+                            leadingContent = { Icon(Icons.AutoMirrored.Outlined.Notes, contentDescription = null) },
                             trailingContent = { AssistChip(onClick = {}, label = { Text(stringResource(R.string.version_name)) }) },
                         )
                     }

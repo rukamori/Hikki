@@ -9,7 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.NavigateNext
+import androidx.compose.material.icons.automirrored.outlined.NavigateNext
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
@@ -19,7 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import moe.rukamori.hikki.R
 import moe.rukamori.hikki.ui.component.PreferenceGroup
@@ -62,7 +62,7 @@ fun SettingsScreen(
                                 headlineContent = { Text(stringResource(R.string.appearance)) },
                                 supportingContent = { Text(stringResource(R.string.appearance_summary)) },
                                 leadingContent = { Icon(Icons.Outlined.ColorLens, contentDescription = null) },
-                                trailingContent = { Icon(Icons.Outlined.NavigateNext, contentDescription = null) },
+                                trailingContent = { Icon(Icons.AutoMirrored.Outlined.NavigateNext, contentDescription = null) },
                                 onClick = onOpenAppearance,
                             )
                         }
@@ -71,7 +71,7 @@ fun SettingsScreen(
                                 headlineContent = { Text(stringResource(R.string.trash)) },
                                 supportingContent = { Text(stringResource(R.string.trash_summary)) },
                                 leadingContent = { Icon(Icons.Outlined.Delete, contentDescription = null) },
-                                trailingContent = { Icon(Icons.Outlined.NavigateNext, contentDescription = null) },
+                                trailingContent = { Icon(Icons.AutoMirrored.Outlined.NavigateNext, contentDescription = null) },
                                 onClick = onOpenTrash,
                             )
                         }
@@ -80,7 +80,7 @@ fun SettingsScreen(
                                 headlineContent = { Text(stringResource(R.string.about)) },
                                 supportingContent = { Text(stringResource(R.string.about_summary)) },
                                 leadingContent = { Icon(Icons.Outlined.Info, contentDescription = null) },
-                                trailingContent = { Icon(Icons.Outlined.NavigateNext, contentDescription = null) },
+                                trailingContent = { Icon(Icons.AutoMirrored.Outlined.NavigateNext, contentDescription = null) },
                                 onClick = onOpenAbout,
                             )
                         }

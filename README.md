@@ -1,4 +1,4 @@
-<p align=center><image src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/assets/app_icon.png" height="200" /></p>
+<p align=center><image src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/assets/app_icon.png" height="150" /></p>
 <h1 align="center">Hikki / 筆記</h1>
 <p align="center">Hikki is a cute and rich notes app for Android !</p>
 <p align="center">
@@ -9,6 +9,55 @@
 
 <p align="center">
  <a href="https://github.com/rukamori/Hikki/releases/latest">
-   <image src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/assets/badge_github.png" height="80"/>
+   <image src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/assets/badge_github.png" height="50"/>
  </a>
 </p>
+
+<p align=center>
+<image src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshort_1.jpg" height="512"/>
+<image src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshort_2.jpg" height="512"/>
+<image src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshort_3.jpg" height="512"/>
+
+---
+
+<h1>👀 Overview</h1>
+
+[x] Material 3 Expressive design!
+
+[x] Very lightweight! (~2Mb app size)
+
+[x] No permissions needed!
+
+[x] Very fast and feature-rich!
+
+---
+
+<h1>💬 Contact Me</h1>
+
+[Telegram](https://t.me/rukamori)
+</br>
+[Email](me@koiiverse.cloud)
+
+---
+
+<h1>❤️ Support</h1>
+
+If you wish to support me, you can see how to do so on [my website](https://koiiverse.cloud/donate)
+
+---
+
+<h1>⚠️ Copyright</h1>
+
+<p>Copyright (c) 2026 rukamori/morrieeattonkatsu
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+The above copyright notice, this permission notice, and its license shall be included in all copies or substantial portions of the Software.

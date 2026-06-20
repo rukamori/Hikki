@@ -1,0 +1,6 @@
+Hikki is a cute and rich notes app for Android!
+
+- Created notes.
+- Manage notes such as archive, trash and duplicates.
+- Rich Preview and Editor.
+- Editor Tools.

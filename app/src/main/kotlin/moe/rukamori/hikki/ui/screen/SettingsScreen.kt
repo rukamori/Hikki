@@ -56,7 +56,7 @@ fun SettingsScreen(
                 verticalArrangement = Arrangement.spacedBy(MdSpacing.sm),
             ) {
                 item(contentType = "settings_group") {
-                    PreferenceGroup(title = stringResource(R.string.settings)) {
+                    PreferenceGroup {
                         item {
                             PreferenceRow(
                                 headlineContent = { Text(stringResource(R.string.appearance)) },
@@ -87,7 +87,7 @@ fun SettingsScreen(
                     }
                 }
                 item(contentType = "about_group") {
-                    PreferenceGroup(title = stringResource(R.string.about)) {
+                    PreferenceGroup {
                         item {
                             PreferenceRow(
                                 headlineContent = { Text(stringResource(R.string.version)) },

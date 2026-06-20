@@ -7,16 +7,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
@@ -31,8 +36,10 @@ private enum class PreferenceGroupPosition {
 }
 
 private val LocalPreferenceGroupPosition = compositionLocalOf<PreferenceGroupPosition?> { null }
-private val PreferenceGroupLargeCorner = 28.dp
+private val PreferenceGroupLargeCorner = 32.dp
 private val PreferenceGroupSmallCorner = 6.dp
+private val PreferenceRowMinHeight = 84.dp
+private val PreferenceIconContainerSize = 56.dp
 
 private fun segmentedPreferenceItemShape(
     index: Int,
@@ -85,7 +92,7 @@ class PreferenceGroupScope internal constructor() {
 
 @Composable
 fun PreferenceGroup(
-    title: String,
+    title: String? = null,
     modifier: Modifier = Modifier,
     content: PreferenceGroupScope.() -> Unit,
 ) {
@@ -94,19 +101,21 @@ fun PreferenceGroup(
     if (itemCount == 0) return
 
     Column(modifier = modifier.fillMaxWidth()) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(horizontal = MdSpacing.sm, vertical = MdSpacing.xs),
-        )
+        if (title != null) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(horizontal = MdSpacing.sm, vertical = MdSpacing.xs),
+            )
+        }
         Column(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .padding(horizontal = MdSpacing.sm),
-            verticalArrangement = Arrangement.spacedBy(2.dp),
+            verticalArrangement = Arrangement.spacedBy(MdSpacing.xxs),
         ) {
             scope.items.forEachIndexed { index, itemContent ->
                 val position =
@@ -153,16 +162,43 @@ fun PreferenceRow(
     ) {
         Column {
             ListItem(
-                headlineContent = headlineContent,
-                supportingContent = supportingContent,
-                leadingContent = leadingContent,
+                headlineContent = {
+                    ProvideTextStyle(MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)) {
+                        headlineContent()
+                    }
+                },
+                supportingContent = supportingContent?.let { content ->
+                    {
+                        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant) {
+                            ProvideTextStyle(MaterialTheme.typography.bodyLarge) {
+                                content()
+                            }
+                        }
+                    }
+                },
+                leadingContent = leadingContent?.let { content ->
+                    {
+                        Surface(
+                            modifier = Modifier.size(PreferenceIconContainerSize),
+                            shape = CircleShape,
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.primary,
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.primary) {
+                                    content()
+                                }
+                            }
+                        }
+                    }
+                },
                 trailingContent = trailingContent,
                 colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .heightIn(min = 64.dp)
-                        .padding(horizontal = MdSpacing.xs, vertical = 2.dp),
+                        .heightIn(min = PreferenceRowMinHeight)
+                        .padding(horizontal = MdSpacing.xs, vertical = MdSpacing.xxs),
             )
             if (content != null) {
                 Box(

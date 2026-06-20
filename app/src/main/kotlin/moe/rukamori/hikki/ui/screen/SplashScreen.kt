@@ -3,16 +3,17 @@ package moe.rukamori.hikki.ui.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Notes
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.Image
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import moe.rukamori.hikki.R
 
@@ -27,10 +28,10 @@ fun SplashScreen(onFinished: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Icon(
-            imageVector = Icons.AutoMirrored.Outlined.Notes,
+        Image(
+            painter = painterResource(R.mipmap.ic_launcher),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(72.dp),
         )
         Text(
             text = stringResource(R.string.app_name),

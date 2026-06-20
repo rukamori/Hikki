@@ -64,7 +64,7 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             LargeTopAppBar(
-                title = { Text(stringResource(R.string.notes)) },
+                title = { Text(stringResource(R.string.app_name)) },
                 actions = {
                     IconButton(onClick = onOpenSearch) {
                         Icon(

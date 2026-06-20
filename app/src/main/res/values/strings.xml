@@ -62,6 +62,11 @@
     <string name="trash_summary">Restore or permanently delete trashed notes.</string>
     <string name="about_summary">App version, markdown renderer, and project details.</string>
     <string name="about_hikki_summary">A rich offline Markdown notes workspace built with Kotlin and Compose.</string>
+    <string name="about_hikki_tagline">Hikki is a cute and rich notes for Android.</string>
+    <string name="developer">Developer</string>
+    <string name="developer_name">morrieeattonkatsu</string>
+    <string name="developer_summary">Love to build open source apps.</string>
+    <string name="project_details">Project details</string>
     <string name="markdown_renderer">Markdown renderer</string>
     <string name="markdown_renderer_summary">Powered by mikepenz multiplatform Markdown renderer for Compose Material 3.</string>
     <string name="version">Version</string>

@@ -20,19 +20,19 @@
 
 ---
 
-<h1>👀 Overview</h1>
+<h2>👀 Overview</h2>
 
-[x] Material 3 Expressive design!
+- [x] Material 3 Expressive design!
 
-[x] Very lightweight! (~2Mb app size)
+- [x] Very lightweight! (~2Mb app size)
 
-[x] No permissions needed!
+- [x] No permissions needed!
 
-[x] Very fast and feature-rich!
+- [x] Very fast and feature-rich!
 
 ---
 
-<h1>💬 Contact Me</h1>
+<h2>💬 Contact Me</h2>
 
 [Telegram](https://t.me/rukamori)
 </br>
@@ -40,13 +40,13 @@
 
 ---
 
-<h1>❤️ Support</h1>
+<h2>❤️ Support</h2>
 
 If you wish to support me, you can see how to do so on [my website](https://koiiverse.cloud/donate)
 
 ---
 
-<h1>⚠️ Copyright</h1>
+<h2>⚠️ Copyright</h2>
 
 <p>Copyright (c) 2026 rukamori/morrieeattonkatsu
 

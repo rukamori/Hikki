@@ -1,3 +1,9 @@
+/*
+ * Hikki (2026)
+ * Copyright (C) Rukamori - github.com/rukamori
+ * Proprietary License
+ */
+
 @file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
 
 package moe.rukamori.hikki.ui

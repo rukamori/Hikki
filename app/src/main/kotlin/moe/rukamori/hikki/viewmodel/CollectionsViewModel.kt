@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import moe.rukamori.hikki.R
+import moe.rukamori.hikki.domain.model.NoteLifecycle
+import moe.rukamori.hikki.domain.model.NoteSort
 import moe.rukamori.hikki.domain.model.ScreenState
 import moe.rukamori.hikki.domain.usecase.NoteUseCases
 import moe.rukamori.hikki.ui.model.CollectionsUiModel
@@ -32,11 +34,21 @@ class CollectionsViewModel
                 noteUseCases.observeFolders(),
                 noteUseCases.observeCategories(),
                 noteUseCases.observeTags(),
-            ) { folders, categories, tags ->
+                noteUseCases.observeNotes(NoteLifecycle.Active, NoteSort.Updated),
+            ) { folders, categories, tags, notes ->
                 if (folders.isEmpty() && categories.isEmpty() && tags.isEmpty()) {
                     ScreenState.Empty
                 } else {
-                    ScreenState.Success(CollectionsUiModel(folders, categories, tags))
+                    ScreenState.Success(
+                        CollectionsUiModel(
+                            folders = folders,
+                            categories = categories,
+                            tags = tags,
+                            folderNoteCounts = notes.mapNotNull { it.folder?.id }.groupingBy { it }.eachCount(),
+                            categoryNoteCounts = notes.mapNotNull { it.category?.id }.groupingBy { it }.eachCount(),
+                            tagNoteCounts = notes.flatMap { note -> note.tags.map { it.id } }.groupingBy { it }.eachCount(),
+                        ),
+                    )
                 }
             }
                 .catch { emit(ScreenState.Error(R.string.error_collections_load)) }
@@ -44,6 +56,13 @@ class CollectionsViewModel
 
         fun createFolder(name: String) {
             runCollectionAction(R.string.folder_created) { noteUseCases.createFolder(name) }
+        }
+
+        fun renameFolder(
+            folderId: Long,
+            name: String,
+        ) {
+            runCollectionAction(R.string.folder_renamed) { noteUseCases.renameFolder(folderId, name) }
         }
 
         fun deleteFolder(folderId: Long) {
@@ -54,6 +73,13 @@ class CollectionsViewModel
             runCollectionAction(R.string.category_created) { noteUseCases.createCategory(name) }
         }
 
+        fun renameCategory(
+            categoryId: Long,
+            name: String,
+        ) {
+            runCollectionAction(R.string.category_renamed) { noteUseCases.renameCategory(categoryId, name) }
+        }
+
         fun deleteCategory(categoryId: Long) {
             runCollectionAction(R.string.category_deleted) { noteUseCases.deleteCategory(categoryId) }
         }
@@ -61,6 +87,13 @@ class CollectionsViewModel
         fun createTag(name: String) {
             val seed = name.trim().fold(0xFF5D6B2FL) { acc, char -> acc + char.code * 31L }
             runCollectionAction(R.string.tag_created) { noteUseCases.createTag(name, seed) }
+        }
+
+        fun renameTag(
+            tagId: Long,
+            name: String,
+        ) {
+            runCollectionAction(R.string.tag_renamed) { noteUseCases.renameTag(tagId, name) }
         }
 
         fun deleteTag(tagId: Long) {

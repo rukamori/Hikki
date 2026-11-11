@@ -91,6 +91,7 @@ class OfflineNotesRepository
             content: String,
         ) {
             withExistingNote(noteId) { note ->
+                if (note.title == title && note.content == content) return@withExistingNote
                 val updated =
                     note.copy(
                         title = title,

@@ -1,64 +1,70 @@
 package moe.rukamori.hikki.ui.screen
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Inventory2
+import androidx.compose.material.icons.outlined.Unarchive
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import moe.rukamori.hikki.R
-import moe.rukamori.hikki.domain.model.DisplayMode
-import moe.rukamori.hikki.ui.component.StateContent
+import moe.rukamori.hikki.ui.component.NoteAction
+import moe.rukamori.hikki.ui.component.NoteTimeline
 import moe.rukamori.hikki.viewmodel.ArchiveViewModel
 
 @Composable
 fun ArchiveScreen(
     onOpenNote: (Long) -> Unit,
     onOpenTrash: () -> Unit,
+    resultMessageRes: Int?,
+    onResultMessageShown: () -> Unit,
     viewModel: ArchiveViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    Scaffold(
-        topBar = {
-            LargeTopAppBar(
-                title = { Text(stringResource(R.string.archive)) },
-                actions = {
-                    IconButton(onClick = onOpenTrash) {
-                        Icon(
-                            imageVector = Icons.Outlined.Delete,
-                            contentDescription = stringResource(R.string.trash),
-                        )
-                    }
-                },
+    LifecycleNotesLayout(
+        titleRes = R.string.archive,
+        state = state,
+        events = viewModel.events,
+        timeline = NoteTimeline.Archived,
+        emptyTitleRes = R.string.archive_empty_title,
+        emptyMessageRes = R.string.archive_empty_message,
+        emptyIcon = Icons.Outlined.Archive,
+        infoRes = R.string.archive_summary,
+        infoIcon = Icons.Outlined.Inventory2,
+        onOpen = { note -> onOpenNote(note.id) },
+        noteActions = { note ->
+            listOf(
+                NoteAction(
+                    icon = Icons.Outlined.Edit,
+                    labelRes = R.string.open,
+                    onClick = { onOpenNote(note.id) },
+                ),
+                NoteAction(
+                    icon = Icons.Outlined.Unarchive,
+                    labelRes = R.string.restore,
+                    onClick = { viewModel.restore(note.id) },
+                ),
+                NoteAction(
+                    icon = Icons.Outlined.Delete,
+                    labelRes = R.string.move_to_trash,
+                    destructive = true,
+                    onClick = { viewModel.moveToTrash(note.id) },
+                ),
             )
         },
-    ) { innerPadding ->
-        StateContent(
-            state = state,
-            modifier = Modifier.padding(innerPadding),
-            emptyTitleRes = R.string.archive_empty_title,
-            emptyMessageRes = R.string.archive_empty_message,
-        ) { model ->
-            NoteListContent(
-                notes = model.notes,
-                displayMode = DisplayMode.List,
-                onOpenNote = onOpenNote,
-                onPin = { _, _ -> },
-                onFavorite = { _, _ -> },
-                onDuplicate = {},
-                onArchive = {},
-                onTrash = viewModel::moveToTrash,
-                trashLabelRes = R.string.move_to_trash,
-                modifier = Modifier.padding(innerPadding),
-            )
-        }
-    }
+        resultMessageRes = resultMessageRes,
+        onResultMessageShown = onResultMessageShown,
+        actions = {
+            IconButton(onClick = onOpenTrash, shapes = IconButtonDefaults.shapes()) {
+                Icon(Icons.Outlined.Delete, contentDescription = stringResource(R.string.trash))
+            }
+        },
+    )
 }

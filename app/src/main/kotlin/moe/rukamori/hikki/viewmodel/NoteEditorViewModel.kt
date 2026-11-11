@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import moe.rukamori.hikki.R
 import moe.rukamori.hikki.domain.model.Category
 import moe.rukamori.hikki.domain.model.EditorMode
@@ -49,6 +51,7 @@ class NoteEditorViewModel
         private var autosaveJob: Job? = null
         private var autosaveDelayMillis: Long = 800L
         private var suppressHistory = false
+        private var persisted: Pair<String, String>? = null
 
         private val _events = MutableSharedFlow<EditorEvent>()
         val events = _events.asSharedFlow()
@@ -81,6 +84,7 @@ class NoteEditorViewModel
                 ScreenState.Success(
                     NoteEditorUiModel(
                         id = note.id,
+                        lifecycle = note.lifecycle,
                         title = current.title,
                         content = current.content,
                         markdown = current.content.text,
@@ -192,7 +196,17 @@ class NoteEditorViewModel
 
         fun flushAutosave() {
             autosaveJob?.cancel()
-            viewModelScope.launch { saveNow(showFeedback = false) }
+            viewModelScope.launch {
+                withContext(NonCancellable) { saveNow(showFeedback = false) }
+            }
+        }
+
+        fun restore() {
+            viewModelScope.launch {
+                runCatching { noteUseCases.restore(noteId) }
+                    .onSuccess { _events.emit(EditorEvent.Message(R.string.note_restored)) }
+                    .onFailure { _events.emit(EditorEvent.Message(R.string.error_note_update)) }
+            }
         }
 
         fun archiveAndClose() {
@@ -219,6 +233,7 @@ class NoteEditorViewModel
         ) {
             if (initializedNoteId == note.id) return
             initializedNoteId = note.id
+            persisted = note.title to note.content
             editorDraft.value =
                 EditorDraft(
                     noteId = note.id,
@@ -246,6 +261,12 @@ class NoteEditorViewModel
 
         private suspend fun saveNow(showFeedback: Boolean) {
             val draft = editorDraft.value
+            val snapshot = draft.title to draft.content.text
+            if (snapshot == persisted) {
+                editorDraft.update { it.copy(isSaving = false) }
+                if (showFeedback) _events.emit(EditorEvent.Message(R.string.note_saved))
+                return
+            }
             runCatching {
                 noteUseCases.saveNote(
                     noteId = draft.noteId,
@@ -254,6 +275,7 @@ class NoteEditorViewModel
                 )
             }
                 .onSuccess {
+                    persisted = snapshot
                     editorDraft.update {
                         it.copy(
                             isSaving = false,

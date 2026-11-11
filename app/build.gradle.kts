@@ -10,7 +10,12 @@ plugins {
 
 android {
     namespace = "moe.rukamori.hikki"
-    compileSdk = 37
+    compileSdk {
+        version =
+            release(37) {
+                minorApiLevel = 1
+            }
+    }
 
     defaultConfig {
         applicationId = "moe.rukamori.hikki"

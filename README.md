@@ -31,9 +31,18 @@
   <a href="https://github.com/rukamori/Hikki/issues/new"><b>Request a feature</b></a>
 </p>
 
-<img src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg" alt="Hikki notes screen" width="30%" />
-<img src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_2.jpg" alt="Hikki editor screen" width="30%" />
-<img src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_3.jpg" alt="Hikki preview screen" width="30%" />
+<table>
+  <tr>
+    <td width="33%"><img src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg" alt="Hikki screenshot 1" width="100%" /></td>
+    <td width="33%"><img src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_2.jpg" alt="Hikki screenshot 2" width="100%" /></td>
+    <td width="33%"><img src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_3.jpg" alt="Hikki screenshot 3" width="100%" /></td>
+  </tr>
+  <tr>
+    <td width="33%"><img src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_4.jpg" alt="Hikki screenshot 4" width="100%" /></td>
+    <td width="33%"><img src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_5.jpg" alt="Hikki screenshot 5" width="100%" /></td>
+    <td width="33%"><img src="https://raw.githubusercontent.com/rukamori/Hikki/refs/heads/main/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_6.jpg" alt="Hikki screenshot 6" width="100%" /></td>
+  </tr>
+</table>
 
 </div>
 

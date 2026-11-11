@@ -2,7 +2,6 @@ package moe.rukamori.hikki.ui.screen
 
 import android.content.ActivityNotFoundException
 import androidx.compose.animation.core.Animatable
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,7 +49,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -58,6 +56,7 @@ import androidx.graphics.shapes.Morph
 import kotlinx.coroutines.delay
 import moe.rukamori.hikki.BuildConfig
 import moe.rukamori.hikki.R
+import moe.rukamori.hikki.ui.component.AppIcon
 import moe.rukamori.hikki.ui.component.DeveloperCard
 import moe.rukamori.hikki.ui.component.MorphShape
 import moe.rukamori.hikki.ui.component.SettingsGroup
@@ -226,15 +225,12 @@ private fun IdentityHero(
                 .padding(horizontal = MdSpacing.md, vertical = MdSpacing.lg),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Image(
-            painter = painterResource(R.drawable.ic_launcher_foreground),
-            contentDescription = null,
+        AppIcon(
+            shape = MorphShape(morph, progress.coerceIn(0f, 1f)),
             modifier =
                 Modifier
                     .size(112.dp)
-                    .graphicsLayer { rotationZ = -60f * (1f - progress) }
-                    .clip(MorphShape(morph, progress.coerceIn(0f, 1f)))
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                    .graphicsLayer { rotationZ = -60f * (1f - progress) },
         )
         Spacer(Modifier.height(MdSpacing.sm))
         Text(

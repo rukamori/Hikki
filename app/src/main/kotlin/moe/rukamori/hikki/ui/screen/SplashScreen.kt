@@ -1,10 +1,8 @@
 package moe.rukamori.hikki.ui.screen
 
 import androidx.compose.animation.core.Animatable
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,14 +18,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.Morph
 import kotlinx.coroutines.launch
 import moe.rukamori.hikki.R
+import moe.rukamori.hikki.ui.component.AppIcon
 import moe.rukamori.hikki.ui.component.MorphShape
 import moe.rukamori.hikki.ui.theme.MdSpacing
 
@@ -54,7 +51,8 @@ fun SplashScreen(onFinished: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         val progress = shapeProgress.value
-        Box(
+        AppIcon(
+            shape = MorphShape(morph, progress.coerceIn(0f, 1f)),
             modifier =
                 Modifier
                     .size(132.dp)
@@ -63,17 +61,8 @@ fun SplashScreen(onFinished: () -> Unit) {
                         scaleX = scale
                         scaleY = scale
                         rotationZ = -60f * (1f - progress)
-                    }
-                    .clip(MorphShape(morph, progress.coerceIn(0f, 1f)))
-                    .background(MaterialTheme.colorScheme.primaryContainer),
-            contentAlignment = Alignment.Center,
-        ) {
-            Image(
-                painter = painterResource(R.drawable.ic_launcher_foreground),
-                contentDescription = null,
-                modifier = Modifier.size(132.dp),
-            )
-        }
+                    },
+        )
         Spacer(Modifier.height(MdSpacing.md))
         Text(
             text = stringResource(R.string.app_name),

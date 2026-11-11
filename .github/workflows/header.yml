@@ -23,7 +23,8 @@ jobs:
           cat > banner.txt <<EOF
           Hikki ($YEAR)
           Copyright (C) Rukamori - github.com/rukamori
-          Proprietary License
+          GPL-3.0 License
+          Do not remove or alter this notice. - Per GPL-3.0 Section 4 & Section 5
           EOF
 
       - name: Find duplicate Kotlin headers
@@ -31,7 +32,7 @@ jobs:
           python3 <<'PY'
           from pathlib import Path
 
-          marker = "Proprietary License"
+          marker = "GPL-3.0 License"
           duplicates = []
 
           for path in Path(".").rglob("*.kt"):
@@ -97,7 +98,7 @@ jobs:
           from pathlib import Path
           import sys
 
-          marker = "Proprietary License"
+          marker = "GPL-3.0 License"
           duplicates = []
 
           for path in Path(".").rglob("*.kt"):

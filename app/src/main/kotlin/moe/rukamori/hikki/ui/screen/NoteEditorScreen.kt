@@ -41,7 +41,8 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -125,7 +126,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -214,8 +214,8 @@ fun NoteEditorScreen(
         ) { current ->
             EditorContent(
                 model = current,
-                onTitleChange = viewModel::updateTitle,
-                onContentChange = viewModel::updateContent,
+                titleState = viewModel.titleState,
+                contentState = viewModel.contentState,
                 onModeChange = viewModel::setMode,
                 onFormat = viewModel::insertMarkdown,
                 onUndo = viewModel::undo,
@@ -413,8 +413,8 @@ private fun SaveStatusPill(
 @Composable
 private fun EditorContent(
     model: NoteEditorUiModel,
-    onTitleChange: (String) -> Unit,
-    onContentChange: (TextFieldValue) -> Unit,
+    titleState: TextFieldState,
+    contentState: TextFieldState,
     onModeChange: (EditorMode) -> Unit,
     onFormat: (MarkdownFormat) -> Unit,
     onUndo: () -> Unit,
@@ -459,7 +459,7 @@ private fun EditorContent(
                             model = model,
                             mode = mode,
                             modes = modes,
-                            onTitleChange = onTitleChange,
+                            titleState = titleState,
                             onModeChange = onModeChange,
                             onFolderChange = onFolderChange,
                             onCategoryChange = onCategoryChange,
@@ -491,8 +491,7 @@ private fun EditorContent(
                                 }
                             } else {
                                 MarkdownBody(
-                                    value = model.content,
-                                    onValueChange = onContentChange,
+                                    state = contentState,
                                     focusRequester = bodyFocus,
                                 )
                             }
@@ -550,7 +549,7 @@ private fun EditorHeader(
     model: NoteEditorUiModel,
     mode: EditorMode,
     modes: List<EditorMode>,
-    onTitleChange: (String) -> Unit,
+    titleState: TextFieldState,
     onModeChange: (EditorMode) -> Unit,
     onFolderChange: (Long?) -> Unit,
     onCategoryChange: (Long?) -> Unit,
@@ -560,24 +559,23 @@ private fun EditorHeader(
     val titleStyle = MaterialTheme.typography.headlineMediumEmphasized.copy(color = MaterialTheme.colorScheme.onSurface)
     Column(verticalArrangement = Arrangement.spacedBy(MdSpacing.sm)) {
         BasicTextField(
-            value = model.title,
-            onValueChange = onTitleChange,
+            state = titleState,
             textStyle = titleStyle,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-            maxLines = 3,
+            lineLimits = TextFieldLineLimits.MultiLine(maxHeightInLines = 3),
             keyboardOptions =
                 KeyboardOptions(
                     capitalization = KeyboardCapitalization.Sentences,
                     imeAction = ImeAction.Next,
                 ),
-            keyboardActions = KeyboardActions(onNext = { onTitleDone() }),
+            onKeyboardAction = { onTitleDone() },
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .padding(top = MdSpacing.xs),
-            decorationBox = { inner ->
+            decorator = { inner ->
                 Box {
-                    if (model.title.isEmpty()) {
+                    if (titleState.text.isEmpty()) {
                         Text(
                             text = stringResource(R.string.untitled_note),
                             style = titleStyle,
@@ -747,8 +745,7 @@ private fun PickerChip(
 
 @Composable
 private fun MarkdownBody(
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
+    state: TextFieldState,
     focusRequester: FocusRequester,
 ) {
     val style =
@@ -757,8 +754,7 @@ private fun MarkdownBody(
             lineHeight = MaterialTheme.typography.bodyLarge.lineHeight * 1.15f,
         )
     BasicTextField(
-        value = value,
-        onValueChange = onValueChange,
+        state = state,
         textStyle = style,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
@@ -766,9 +762,9 @@ private fun MarkdownBody(
             Modifier
                 .fillMaxWidth()
                 .focusRequester(focusRequester),
-        decorationBox = { inner ->
+        decorator = { inner ->
             Box(Modifier.fillMaxWidth()) {
-                if (value.text.isEmpty()) {
+                if (state.text.isEmpty()) {
                     Text(
                         text = stringResource(R.string.start_writing),
                         style = style,

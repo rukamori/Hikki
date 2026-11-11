@@ -8,8 +8,11 @@
 package moe.rukamori.hikki.viewmodel
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.text.input.TextFieldBuffer
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.placeCursorAtEnd
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -57,8 +60,11 @@ class NoteEditorViewModel
         private var initializedNoteId: Long? = null
         private var autosaveJob: Job? = null
         private var autosaveDelayMillis: Long = 800L
-        private var suppressHistory = false
         private var persisted: Pair<String, String>? = null
+        private var observedContent = TextSnapshot(text = "", selectionStart = 0, selectionEnd = 0)
+
+        val titleState = TextFieldState()
+        val contentState = TextFieldState()
 
         private val _events = MutableSharedFlow<EditorEvent>()
         val events = _events.asSharedFlow()
@@ -93,8 +99,7 @@ class NoteEditorViewModel
                         id = note.id,
                         lifecycle = note.lifecycle,
                         title = current.title,
-                        content = current.content,
-                        markdown = current.content.text,
+                        markdown = current.content,
                         folders = sources.folders,
                         categories = sources.categories,
                         tags = sources.tags,
@@ -106,9 +111,9 @@ class NoteEditorViewModel
                         isFavorite = current.isFavorite,
                         isSaving = current.isSaving,
                         lastSavedAt = current.lastSavedAt,
-                        wordCount = current.content.text.wordCount(),
-                        characterCount = current.content.text.length,
-                        readingMinutes = current.content.text.readingMinutes(),
+                        wordCount = current.content.wordCount(),
+                        characterCount = current.content.length,
+                        readingMinutes = current.content.readingMinutes(),
                         canUndo = history.isNotEmpty(),
                         canRedo = redoHistory.isNotEmpty(),
                     ),
@@ -117,19 +122,25 @@ class NoteEditorViewModel
                 .catch { emit(ScreenState.Error(R.string.error_note_load)) }
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ScreenState.Loading)
 
-        fun updateTitle(value: String) {
-            editorDraft.update { it.copy(title = value) }
-            scheduleAutosave()
-        }
-
-        fun updateContent(value: TextFieldValue) {
-            val old = editorDraft.value.content
-            if (!suppressHistory && old != value) {
-                pushHistory(old)
-                redoHistory.clear()
+        init {
+            viewModelScope.launch {
+                snapshotFlow { titleState.text.toString() }.collect { title ->
+                    if (title == editorDraft.value.title) return@collect
+                    editorDraft.update { it.copy(title = title) }
+                    scheduleAutosave()
+                }
             }
-            editorDraft.update { it.copy(content = value) }
-            scheduleAutosave()
+            viewModelScope.launch {
+                snapshotFlow { contentState.toSnapshot() }.collect { snapshot ->
+                    val previous = observedContent
+                    observedContent = snapshot
+                    if (snapshot.text == editorDraft.value.content) return@collect
+                    pushHistory(previous)
+                    redoHistory.clear()
+                    editorDraft.update { it.copy(content = snapshot.text) }
+                    scheduleAutosave()
+                }
+            }
         }
 
         fun setMode(value: EditorMode) {
@@ -184,20 +195,18 @@ class NoteEditorViewModel
         }
 
         fun insertMarkdown(format: MarkdownFormat) {
-            val current = editorDraft.value.content
-            val replacement = format.apply(current)
-            updateContent(replacement)
+            contentState.edit { format.applyTo(this) }
         }
 
         fun undo() {
             val previous = history.removeLastOrNull() ?: return
-            redoHistory.addLast(editorDraft.value.content.toSnapshot())
+            redoHistory.addLast(contentState.toSnapshot())
             applySnapshot(previous)
         }
 
         fun redo() {
             val next = redoHistory.removeLastOrNull() ?: return
-            history.addLast(editorDraft.value.content.toSnapshot())
+            history.addLast(contentState.toSnapshot())
             applySnapshot(next)
         }
 
@@ -245,7 +254,7 @@ class NoteEditorViewModel
                 EditorDraft(
                     noteId = note.id,
                     title = note.title,
-                    content = TextFieldValue(note.content),
+                    content = note.content,
                     folderId = note.folder?.id,
                     categoryId = note.category?.id,
                     tagIds = note.tags.map { it.id }.toSet(),
@@ -254,6 +263,14 @@ class NoteEditorViewModel
                     isFavorite = note.isFavorite,
                     lastSavedAt = note.updatedAt,
                 )
+            titleState.edit {
+                replace(0, length, note.title)
+                placeCursorAtEnd()
+            }
+            contentState.edit {
+                replace(0, length, note.content)
+                selection = TextRange(0)
+            }
         }
 
         private fun scheduleAutosave() {
@@ -268,7 +285,7 @@ class NoteEditorViewModel
 
         private suspend fun saveNow(showFeedback: Boolean) {
             val draft = editorDraft.value
-            val snapshot = draft.title to draft.content.text
+            val snapshot = draft.title to draft.content
             if (snapshot == persisted) {
                 editorDraft.update { it.copy(isSaving = false) }
                 if (showFeedback) _events.emit(EditorEvent.Message(R.string.note_saved))
@@ -278,7 +295,7 @@ class NoteEditorViewModel
                 noteUseCases.saveNote(
                     noteId = draft.noteId,
                     title = draft.title,
-                    content = draft.content.text,
+                    content = draft.content,
                 )
             }
                 .onSuccess {
@@ -297,31 +314,25 @@ class NoteEditorViewModel
                 }
         }
 
-        private fun pushHistory(value: TextFieldValue) {
-            history.addLast(value.toSnapshot())
+        private fun pushHistory(snapshot: TextSnapshot) {
+            history.addLast(snapshot)
             while (history.size > MaxHistorySize) {
                 history.removeFirst()
             }
         }
 
         private fun applySnapshot(snapshot: TextSnapshot) {
-            suppressHistory = true
-            editorDraft.update {
-                it.copy(
-                    content =
-                        TextFieldValue(
-                            text = snapshot.text,
-                            selection = TextRange(snapshot.selectionStart, snapshot.selectionEnd),
-                        ),
-                )
+            editorDraft.update { it.copy(content = snapshot.text) }
+            contentState.edit {
+                replace(0, length, snapshot.text)
+                selection = TextRange(snapshot.selectionStart, snapshot.selectionEnd)
             }
-            suppressHistory = false
             scheduleAutosave()
         }
 
-        private fun TextFieldValue.toSnapshot(): TextSnapshot =
+        private fun TextFieldState.toSnapshot(): TextSnapshot =
             TextSnapshot(
-                text = text,
+                text = text.toString(),
                 selectionStart = selection.start,
                 selectionEnd = selection.end,
             )
@@ -356,7 +367,7 @@ enum class MarkdownFormat {
 private data class EditorDraft(
     val noteId: Long,
     val title: String = "",
-    val content: TextFieldValue = TextFieldValue(),
+    val content: String = "",
     val folderId: Long? = null,
     val categoryId: Long? = null,
     val tagIds: Set<Long> = emptySet(),
@@ -380,22 +391,19 @@ private data class NoteEditorSources(
     val tags: List<Tag>,
 )
 
-private fun MarkdownFormat.apply(value: TextFieldValue): TextFieldValue {
-    val selection = value.selection
-    val start = minOf(selection.start, selection.end)
-    val end = maxOf(selection.start, selection.end)
-    val selected = value.text.substring(start, end)
+private fun MarkdownFormat.applyTo(buffer: TextFieldBuffer) {
+    val start = buffer.selection.min
+    val end = buffer.selection.max
+    val selected = buffer.asCharSequence().substring(start, end)
 
-    fun replace(replacement: String): TextFieldValue {
-        val text = value.text.replaceRange(start, end, replacement)
-        val cursor = start + replacement.length
-        return TextFieldValue(text = text, selection = TextRange(cursor))
+    fun replace(replacement: String) {
+        buffer.replace(start, end, replacement)
+        buffer.selection = TextRange(start + replacement.length)
     }
 
-    fun wrap(prefix: String, suffix: String = prefix): TextFieldValue =
-        replace(prefix + selected.ifBlank { "text" } + suffix)
+    fun wrap(prefix: String, suffix: String = prefix) = replace(prefix + selected.ifBlank { "text" } + suffix)
 
-    return when (this) {
+    when (this) {
         MarkdownFormat.Heading -> replace("## ${selected.ifBlank { "Heading" }}")
         MarkdownFormat.Bold -> wrap("**")
         MarkdownFormat.Italic -> wrap("*")

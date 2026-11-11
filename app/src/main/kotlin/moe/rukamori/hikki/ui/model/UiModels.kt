@@ -8,7 +8,6 @@
 package moe.rukamori.hikki.ui.model
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.text.input.TextFieldValue
 import moe.rukamori.hikki.domain.model.AppSettings
 import moe.rukamori.hikki.domain.model.Category
 import moe.rukamori.hikki.domain.model.DisplayMode
@@ -100,7 +99,6 @@ data class NoteEditorUiModel(
     val id: Long,
     val lifecycle: NoteLifecycle,
     val title: String,
-    val content: TextFieldValue,
     val markdown: String,
     val folders: List<Folder>,
     val categories: List<Category>,

@@ -10,6 +10,7 @@ package moe.rukamori.hikki.domain.usecase
 import kotlinx.coroutines.flow.Flow
 import moe.rukamori.hikki.domain.model.Category
 import moe.rukamori.hikki.domain.model.Folder
+import moe.rukamori.hikki.domain.model.LibraryStats
 import moe.rukamori.hikki.domain.model.Note
 import moe.rukamori.hikki.domain.model.NoteLifecycle
 import moe.rukamori.hikki.domain.model.NoteSort
@@ -40,6 +41,10 @@ class NoteUseCases
         fun observeCategories(): Flow<List<Category>> = repository.observeCategories()
 
         fun observeTags(): Flow<List<Tag>> = repository.observeTags()
+
+        fun observeLibraryStats(): Flow<LibraryStats> = repository.observeLibraryStats()
+
+        suspend fun emptyTrash(): Int = repository.emptyTrash()
 
         suspend fun createNote(): Long = repository.createNote(title = "", content = "")
 

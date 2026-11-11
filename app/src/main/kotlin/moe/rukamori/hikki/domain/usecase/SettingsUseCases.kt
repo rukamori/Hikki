@@ -13,6 +13,7 @@ import moe.rukamori.hikki.domain.model.DisplayMode
 import moe.rukamori.hikki.domain.model.EditorMode
 import moe.rukamori.hikki.domain.model.NoteSort
 import moe.rukamori.hikki.domain.model.ThemeMode
+import moe.rukamori.hikki.domain.model.TrashRetention
 import moe.rukamori.hikki.domain.repository.SettingsRepository
 import javax.inject.Inject
 
@@ -36,4 +37,6 @@ class SettingsUseCases
         suspend fun setDefaultEditorMode(value: EditorMode) = repository.setDefaultEditorMode(value)
 
         suspend fun setAutosaveDelayMillis(value: Long) = repository.setAutosaveDelayMillis(value)
+
+        suspend fun setTrashRetention(value: TrashRetention) = repository.setTrashRetention(value)
     }

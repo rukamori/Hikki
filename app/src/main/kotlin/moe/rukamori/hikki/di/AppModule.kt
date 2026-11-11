@@ -14,12 +14,22 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import moe.rukamori.hikki.data.db.HikkiDatabase
 import moe.rukamori.hikki.data.repository.DataStoreSettingsRepository
+import moe.rukamori.hikki.data.repository.LocalBackupRepository
 import moe.rukamori.hikki.data.repository.OfflineNotesRepository
+import moe.rukamori.hikki.domain.repository.BackupRepository
 import moe.rukamori.hikki.domain.repository.NotesRepository
 import moe.rukamori.hikki.domain.repository.SettingsRepository
+import javax.inject.Qualifier
 import javax.inject.Singleton
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class ApplicationScope
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -33,6 +43,15 @@ object DatabaseModule {
 
 @Module
 @InstallIn(SingletonComponent::class)
+object CoroutineModule {
+    @Provides
+    @Singleton
+    @ApplicationScope
+    fun provideApplicationScope(): CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
     @Binds
     @Singleton
@@ -41,4 +60,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindSettingsRepository(repository: DataStoreSettingsRepository): SettingsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindBackupRepository(repository: LocalBackupRepository): BackupRepository
 }

@@ -10,6 +10,7 @@ package moe.rukamori.hikki.data.repository
 import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import moe.rukamori.hikki.data.db.CategoryEntity
@@ -22,6 +23,7 @@ import moe.rukamori.hikki.data.db.TagEntity
 import moe.rukamori.hikki.data.db.toDomain
 import moe.rukamori.hikki.domain.model.Category
 import moe.rukamori.hikki.domain.model.Folder
+import moe.rukamori.hikki.domain.model.LibraryStats
 import moe.rukamori.hikki.domain.model.Note
 import moe.rukamori.hikki.domain.model.NoteLifecycle
 import moe.rukamori.hikki.domain.model.NoteSort
@@ -70,6 +72,35 @@ class OfflineNotesRepository
 
         override fun observeTags(): Flow<List<Tag>> =
             dao.observeTags().map { tags -> tags.map(TagEntity::toDomain) }
+
+        override fun observeLibraryStats(): Flow<LibraryStats> =
+            combine(
+                dao.observeLifecycleCounts(),
+                dao.observeFolderCount(),
+                dao.observeCategoryCount(),
+                dao.observeTagCount(),
+            ) { lifecycleCounts, folders, categories, tags ->
+                val byLifecycle = lifecycleCounts.associate { it.lifecycle to it.count }
+                LibraryStats(
+                    activeNotes = byLifecycle[NoteLifecycle.Active] ?: 0,
+                    archivedNotes = byLifecycle[NoteLifecycle.Archived] ?: 0,
+                    trashedNotes = byLifecycle[NoteLifecycle.Trashed] ?: 0,
+                    folders = folders,
+                    categories = categories,
+                    tags = tags,
+                )
+            }
+
+        override suspend fun emptyTrash(): Int = purgeTrashedBefore(Long.MAX_VALUE)
+
+        override suspend fun purgeTrashedBefore(cutoff: Long): Int =
+            withContext(Dispatchers.IO) {
+                database.withTransaction {
+                    val deleted = dao.deleteNotesBefore(NoteLifecycle.Trashed, cutoff)
+                    if (deleted > 0) database.rebuildSearchIndex()
+                    deleted
+                }
+            }
 
         override suspend fun createNote(
             title: String,

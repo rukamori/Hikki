@@ -29,6 +29,10 @@ import androidx.room.TypeConverters
 abstract class HikkiDatabase : RoomDatabase() {
     abstract val dao: HikkiDao
 
+    fun rebuildSearchIndex() {
+        openHelper.writableDatabase.execSQL("INSERT INTO note_search(note_search) VALUES('rebuild')")
+    }
+
     companion object {
         private const val DatabaseName = "hikki.db"
 

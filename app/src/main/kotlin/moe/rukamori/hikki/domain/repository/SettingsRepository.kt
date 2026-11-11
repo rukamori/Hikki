@@ -13,6 +13,7 @@ import moe.rukamori.hikki.domain.model.DisplayMode
 import moe.rukamori.hikki.domain.model.EditorMode
 import moe.rukamori.hikki.domain.model.NoteSort
 import moe.rukamori.hikki.domain.model.ThemeMode
+import moe.rukamori.hikki.domain.model.TrashRetention
 
 interface SettingsRepository {
     val settings: Flow<AppSettings>
@@ -30,4 +31,10 @@ interface SettingsRepository {
     suspend fun setDefaultEditorMode(value: EditorMode)
 
     suspend fun setAutosaveDelayMillis(value: Long)
+
+    suspend fun setTrashRetention(value: TrashRetention)
+
+    suspend fun setLastBackupAt(value: Long)
+
+    suspend fun restorePreferences(value: AppSettings)
 }

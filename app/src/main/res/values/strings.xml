@@ -195,6 +195,43 @@
     <string name="error_collections_load">Could not load collections.</string>
     <string name="error_collection_update">Could not update collection.</string>
     <string name="error_settings_load">Could not load settings.</string>
+    <string name="error_library_stats">Could not count your library.</string>
+    <string name="error_backup_write">Could not write the backup file.</string>
+    <string name="error_backup_read">Could not open the backup file.</string>
+    <string name="error_backup_restore">Could not restore the backup. Your notes were left unchanged.</string>
+    <string name="error_backup_invalid">This file is not a valid Hikki backup.</string>
+    <string name="error_backup_unsupported">This backup was made by a newer version of Hikki. Update the app to restore it.</string>
+    <string name="error_export_markdown">Could not export your notes.</string>
+    <string name="error_empty_trash">Could not empty the trash.</string>
+    <string name="operation_in_progress">In progress</string>
+    <string name="list_separator">" · "</string>
+    <string name="library">Library</string>
+    <string name="library_loading">Counting your notes…</string>
+    <string name="backup_and_restore">Backup &amp; restore</string>
+    <string name="backup_now">Back up now</string>
+    <string name="backup_never">No backup yet. Saves notes, collections, and settings to a file.</string>
+    <string name="last_backup">Last backup %1$s</string>
+    <string name="restore_backup">Restore from backup</string>
+    <string name="restore_backup_summary">Bring back notes from a Hikki backup file.</string>
+    <string name="restore_backup_title">Restore backup?</string>
+    <string name="backup_origin">Created %1$s</string>
+    <string name="backup_origin_version">Created %1$s with Hikki %2$s</string>
+    <string name="restore_mode_merge">Merge</string>
+    <string name="restore_mode_merge_summary">Add notes from the backup and keep everything already here.</string>
+    <string name="restore_mode_replace">Replace everything</string>
+    <string name="restore_mode_replace_summary">Erase current notes and collections, then restore the backup.</string>
+    <string name="restore_replace_warning">Every note, folder, category, and tag on this device will be erased. This cannot be undone.</string>
+    <string name="restore_replace_confirm">Erase and restore</string>
+    <string name="export_markdown">Export as Markdown</string>
+    <string name="export_markdown_summary">Save active and archived notes as .md files in a ZIP.</string>
+    <string name="auto_empty_trash">Auto-empty trash</string>
+    <string name="auto_empty_trash_summary">Permanently delete notes that stay in the trash longer than this.</string>
+    <string name="retention_never">Never</string>
+    <string name="retention_week">7 days</string>
+    <string name="retention_month">30 days</string>
+    <string name="retention_quarter">90 days</string>
+    <string name="empty_trash">Empty trash</string>
+    <string name="empty_trash_title">Empty trash?</string>
 
     <plurals name="notes_count">
         <item quantity="one">%d note</item>
@@ -227,5 +264,33 @@
     <plurals name="reading_minutes">
         <item quantity="one">%d min read</item>
         <item quantity="other">%d min read</item>
+    </plurals>
+    <plurals name="archived_count">
+        <item quantity="one">%d archived</item>
+        <item quantity="other">%d archived</item>
+    </plurals>
+    <plurals name="trash_contains">
+        <item quantity="one">%d in trash</item>
+        <item quantity="other">%d in trash</item>
+    </plurals>
+    <plurals name="empty_trash_message">
+        <item quantity="one">%d note will be erased. This cannot be undone.</item>
+        <item quantity="other">%d notes will be erased. This cannot be undone.</item>
+    </plurals>
+    <plurals name="trash_emptied">
+        <item quantity="one">Deleted %d note</item>
+        <item quantity="other">Deleted %d notes</item>
+    </plurals>
+    <plurals name="backup_created">
+        <item quantity="one">Backed up %d note</item>
+        <item quantity="other">Backed up %d notes</item>
+    </plurals>
+    <plurals name="backup_restored">
+        <item quantity="one">Restored %d note</item>
+        <item quantity="other">Restored %d notes</item>
+    </plurals>
+    <plurals name="markdown_exported">
+        <item quantity="one">Exported %d note</item>
+        <item quantity="other">Exported %d notes</item>
     </plurals>
 </resources>

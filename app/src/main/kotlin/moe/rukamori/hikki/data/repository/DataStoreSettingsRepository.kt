@@ -21,6 +21,7 @@ import moe.rukamori.hikki.domain.model.DisplayMode
 import moe.rukamori.hikki.domain.model.EditorMode
 import moe.rukamori.hikki.domain.model.NoteSort
 import moe.rukamori.hikki.domain.model.ThemeMode
+import moe.rukamori.hikki.domain.model.TrashRetention
 import moe.rukamori.hikki.domain.repository.SettingsRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,7 +43,9 @@ class DataStoreSettingsRepository
                     displayMode = preferences[DisplayModeKey].toEnum(DisplayMode.List),
                     sort = preferences[SortKey].toEnum(NoteSort.Updated),
                     defaultEditorMode = preferences[EditorModeKey].toEnum(EditorMode.Edit),
-                    autosaveDelayMillis = preferences[AutosaveDelayKey]?.coerceIn(250L, 5_000L) ?: 800L,
+                    autosaveDelayMillis = preferences[AutosaveDelayKey]?.coerceIn(MinAutosaveDelay, MaxAutosaveDelay) ?: 800L,
+                    trashRetention = preferences[TrashRetentionKey].toEnum(TrashRetention.Never),
+                    lastBackupAt = preferences[LastBackupKey],
                 )
             }
 
@@ -71,7 +74,28 @@ class DataStoreSettingsRepository
         }
 
         override suspend fun setAutosaveDelayMillis(value: Long) {
-            context.hikkiDataStore.edit { it[AutosaveDelayKey] = value.coerceIn(250L, 5_000L) }
+            context.hikkiDataStore.edit { it[AutosaveDelayKey] = value.coerceIn(MinAutosaveDelay, MaxAutosaveDelay) }
+        }
+
+        override suspend fun setTrashRetention(value: TrashRetention) {
+            context.hikkiDataStore.edit { it[TrashRetentionKey] = value.name }
+        }
+
+        override suspend fun setLastBackupAt(value: Long) {
+            context.hikkiDataStore.edit { it[LastBackupKey] = value }
+        }
+
+        override suspend fun restorePreferences(value: AppSettings) {
+            context.hikkiDataStore.edit { preferences ->
+                preferences[ThemeModeKey] = value.themeMode.name
+                preferences[DynamicColorKey] = value.dynamicColor
+                preferences[PureBlackKey] = value.pureBlack
+                preferences[DisplayModeKey] = value.displayMode.name
+                preferences[SortKey] = value.sort.name
+                preferences[EditorModeKey] = value.defaultEditorMode.name
+                preferences[AutosaveDelayKey] = value.autosaveDelayMillis.coerceIn(MinAutosaveDelay, MaxAutosaveDelay)
+                preferences[TrashRetentionKey] = value.trashRetention.name
+            }
         }
 
         private inline fun <reified T : Enum<T>> String?.toEnum(default: T): T =
@@ -85,5 +109,9 @@ class DataStoreSettingsRepository
             val SortKey = stringPreferencesKey("sort")
             val EditorModeKey = stringPreferencesKey("editor_mode")
             val AutosaveDelayKey = longPreferencesKey("autosave_delay")
+            val TrashRetentionKey = stringPreferencesKey("trash_retention")
+            val LastBackupKey = longPreferencesKey("last_backup_at")
+            const val MinAutosaveDelay = 250L
+            const val MaxAutosaveDelay = 5_000L
         }
     }

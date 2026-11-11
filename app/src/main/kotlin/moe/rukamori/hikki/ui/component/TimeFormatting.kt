@@ -24,6 +24,15 @@ fun relativeTime(timestamp: Long): String =
 
 @Composable
 @ReadOnlyComposable
+fun dateTime(timestamp: Long): String =
+    DateUtils.formatDateTime(
+        LocalContext.current,
+        timestamp,
+        DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_SHOW_YEAR or DateUtils.FORMAT_ABBREV_MONTH or DateUtils.FORMAT_SHOW_TIME,
+    )
+
+@Composable
+@ReadOnlyComposable
 fun clockTime(timestamp: Long): String =
     DateUtils.formatDateTime(
         LocalContext.current,

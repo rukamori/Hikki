@@ -7,8 +7,12 @@
 
 package moe.rukamori.hikki.ui.model
 
+import androidx.annotation.PluralsRes
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
+import moe.rukamori.hikki.R
 import moe.rukamori.hikki.domain.model.AppSettings
+import moe.rukamori.hikki.domain.model.BackupSummary
 import moe.rukamori.hikki.domain.model.Category
 import moe.rukamori.hikki.domain.model.DisplayMode
 import moe.rukamori.hikki.domain.model.EditorMode
@@ -122,6 +126,38 @@ data class NoteEditorUiModel(
 data class SettingsUiModel(
     val settings: AppSettings,
 )
+
+enum class DataOperation(@param:StringRes val errorRes: Int) {
+    Backup(R.string.error_backup_write),
+    Inspect(R.string.error_backup_read),
+    Restore(R.string.error_backup_restore),
+    ExportMarkdown(R.string.error_export_markdown),
+    EmptyTrash(R.string.error_empty_trash),
+}
+
+@Immutable
+data class PendingRestore(
+    val uri: String,
+    val summary: BackupSummary,
+)
+
+@Immutable
+data class DataOperationUiState(
+    val running: DataOperation? = null,
+    val pendingRestore: PendingRestore? = null,
+)
+
+@Immutable
+sealed interface DataMessage {
+    @Immutable
+    data class Text(@param:StringRes val messageRes: Int) : DataMessage
+
+    @Immutable
+    data class Count(
+        @param:PluralsRes val messageRes: Int,
+        val count: Int,
+    ) : DataMessage
+}
 
 fun Note.toCardUiModel(): NoteCardUiModel =
     NoteCardUiModel(

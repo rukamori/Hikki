@@ -124,6 +124,11 @@ data class NoteSearchEntity(
     val content: String,
 )
 
+data class LifecycleCount(
+    val lifecycle: NoteLifecycle,
+    val count: Int,
+)
+
 data class NoteWithRelations(
     @Embedded val note: NoteEntity,
     @Relation(parentColumn = "folderId", entityColumn = "id")

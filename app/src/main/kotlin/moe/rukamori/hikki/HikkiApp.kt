@@ -9,6 +9,16 @@ package moe.rukamori.hikki
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
+import moe.rukamori.hikki.data.maintenance.TrashRetentionCleaner
+import javax.inject.Inject
 
 @HiltAndroidApp
-class HikkiApp : Application()
+class HikkiApp : Application() {
+    @Inject
+    lateinit var trashRetentionCleaner: TrashRetentionCleaner
+
+    override fun onCreate() {
+        super.onCreate()
+        trashRetentionCleaner.start()
+    }
+}

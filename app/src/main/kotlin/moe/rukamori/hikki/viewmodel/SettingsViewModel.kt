@@ -22,6 +22,7 @@ import moe.rukamori.hikki.domain.model.EditorMode
 import moe.rukamori.hikki.domain.model.NoteSort
 import moe.rukamori.hikki.domain.model.ScreenState
 import moe.rukamori.hikki.domain.model.ThemeMode
+import moe.rukamori.hikki.domain.model.TrashRetention
 import moe.rukamori.hikki.domain.usecase.SettingsUseCases
 import moe.rukamori.hikki.ui.model.SettingsUiModel
 import javax.inject.Inject
@@ -67,5 +68,9 @@ class SettingsViewModel
 
         fun setAutosaveDelayMillis(value: Long) {
             viewModelScope.launch { settingsUseCases.setAutosaveDelayMillis(value) }
+        }
+
+        fun setTrashRetention(value: TrashRetention) {
+            viewModelScope.launch { settingsUseCases.setTrashRetention(value) }
         }
     }

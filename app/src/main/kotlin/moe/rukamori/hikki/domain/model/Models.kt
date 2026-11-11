@@ -42,6 +42,21 @@ enum class ThemeMode(@param:StringRes val labelRes: Int) {
     Dark(R.string.theme_dark),
 }
 
+enum class TrashRetention(
+    val days: Int?,
+    @param:StringRes val labelRes: Int,
+) {
+    Never(null, R.string.retention_never),
+    Week(7, R.string.retention_week),
+    Month(30, R.string.retention_month),
+    Quarter(90, R.string.retention_quarter),
+}
+
+enum class RestoreMode {
+    Merge,
+    Replace,
+}
+
 @Immutable
 data class Note(
     val id: Long,
@@ -90,7 +105,33 @@ data class AppSettings(
     val sort: NoteSort = NoteSort.Updated,
     val defaultEditorMode: EditorMode = EditorMode.Edit,
     val autosaveDelayMillis: Long = 800L,
+    val trashRetention: TrashRetention = TrashRetention.Never,
+    val lastBackupAt: Long? = null,
 )
+
+@Immutable
+data class LibraryStats(
+    val activeNotes: Int = 0,
+    val archivedNotes: Int = 0,
+    val trashedNotes: Int = 0,
+    val folders: Int = 0,
+    val categories: Int = 0,
+    val tags: Int = 0,
+)
+
+@Immutable
+data class BackupSummary(
+    val exportedAt: Long,
+    val appVersion: String,
+    val notes: Int,
+    val folders: Int,
+    val categories: Int,
+    val tags: Int,
+)
+
+class InvalidBackupException(cause: Throwable? = null) : Exception(cause)
+
+class UnsupportedBackupException(val version: Int) : Exception()
 
 @Immutable
 data class NoteSearchFilter(

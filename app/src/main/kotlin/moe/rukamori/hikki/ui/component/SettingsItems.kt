@@ -9,16 +9,23 @@
 
 package moe.rukamori.hikki.ui.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.ListItemShapes
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
@@ -28,8 +35,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.RoundedPolygon
+import moe.rukamori.hikki.R
 import moe.rukamori.hikki.ui.theme.MdSpacing
 
 class SettingsGroupScope internal constructor() {
@@ -111,6 +122,49 @@ fun SettingsNavigationRow(
                 imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
                 contentDescription = null,
             )
+        },
+    ) {
+        Text(title)
+    }
+}
+
+@Composable
+fun SettingsActionRow(
+    shapes: ListItemShapes,
+    icon: ImageVector,
+    title: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    summary: String? = null,
+    enabled: Boolean = true,
+    busy: Boolean = false,
+    destructive: Boolean = false,
+    polygon: RoundedPolygon = MaterialShapes.Cookie9Sided,
+) {
+    val motion = MaterialTheme.motionScheme
+    val busyLabel = stringResource(R.string.operation_in_progress)
+    SegmentedListItem(
+        onClick = onClick,
+        shapes = shapes,
+        modifier = if (busy) modifier.semantics { stateDescription = busyLabel } else modifier,
+        enabled = enabled && !busy,
+        leadingContent = {
+            SettingsIcon(
+                icon = icon,
+                polygon = polygon,
+                containerColor = if (destructive) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = if (destructive) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSecondaryContainer,
+            )
+        },
+        supportingContent = summary?.let { text -> { Text(text) } },
+        trailingContent = {
+            AnimatedVisibility(
+                visible = busy,
+                enter = fadeIn(motion.fastEffectsSpec()) + scaleIn(motion.fastSpatialSpec()),
+                exit = fadeOut(motion.fastEffectsSpec()) + scaleOut(motion.fastSpatialSpec()),
+            ) {
+                LoadingIndicator(Modifier.size(32.dp))
+            }
         },
     ) {
         Text(title)

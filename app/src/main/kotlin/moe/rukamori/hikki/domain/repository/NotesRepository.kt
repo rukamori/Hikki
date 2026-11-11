@@ -10,6 +10,7 @@ package moe.rukamori.hikki.domain.repository
 import kotlinx.coroutines.flow.Flow
 import moe.rukamori.hikki.domain.model.Category
 import moe.rukamori.hikki.domain.model.Folder
+import moe.rukamori.hikki.domain.model.LibraryStats
 import moe.rukamori.hikki.domain.model.Note
 import moe.rukamori.hikki.domain.model.NoteLifecycle
 import moe.rukamori.hikki.domain.model.NoteSort
@@ -34,6 +35,12 @@ interface NotesRepository {
     fun observeCategories(): Flow<List<Category>>
 
     fun observeTags(): Flow<List<Tag>>
+
+    fun observeLibraryStats(): Flow<LibraryStats>
+
+    suspend fun emptyTrash(): Int
+
+    suspend fun purgeTrashedBefore(cutoff: Long): Int
 
     suspend fun createNote(
         title: String,

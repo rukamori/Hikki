@@ -81,6 +81,70 @@ interface HikkiDao {
     @Query("SELECT * FROM note WHERE id = :noteId LIMIT 1")
     suspend fun getNoteEntity(noteId: Long): NoteEntity?
 
+    @Query("SELECT lifecycle, COUNT(*) AS count FROM note GROUP BY lifecycle")
+    fun observeLifecycleCounts(): Flow<List<LifecycleCount>>
+
+    @Query("SELECT COUNT(*) FROM folder")
+    fun observeFolderCount(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM category")
+    fun observeCategoryCount(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM tag")
+    fun observeTagCount(): Flow<Int>
+
+    @Query("SELECT * FROM note ORDER BY id")
+    suspend fun getAllNotes(): List<NoteEntity>
+
+    @Query("SELECT * FROM folder ORDER BY id")
+    suspend fun getAllFolders(): List<FolderEntity>
+
+    @Query("SELECT * FROM category ORDER BY id")
+    suspend fun getAllCategories(): List<CategoryEntity>
+
+    @Query("SELECT * FROM tag ORDER BY id")
+    suspend fun getAllTags(): List<TagEntity>
+
+    @Query("SELECT * FROM note_tag_map")
+    suspend fun getAllNoteTags(): List<NoteTagMap>
+
+    @Query("SELECT * FROM folder WHERE name = :name LIMIT 1")
+    suspend fun getFolderByName(name: String): FolderEntity?
+
+    @Query("SELECT * FROM category WHERE name = :name LIMIT 1")
+    suspend fun getCategoryByName(name: String): CategoryEntity?
+
+    @Query("SELECT * FROM tag WHERE name = :name LIMIT 1")
+    suspend fun getTagByName(name: String): TagEntity?
+
+    @Query("SELECT COUNT(*) FROM note WHERE title = :title AND content = :content AND createdAt = :createdAt")
+    suspend fun countMatchingNotes(
+        title: String,
+        content: String,
+        createdAt: Long,
+    ): Int
+
+    @Query("DELETE FROM note WHERE lifecycle = :lifecycle AND COALESCE(trashedAt, 0) < :cutoff")
+    suspend fun deleteNotesBefore(
+        lifecycle: NoteLifecycle,
+        cutoff: Long,
+    ): Int
+
+    @Query("DELETE FROM note_tag_map")
+    suspend fun deleteAllNoteTags()
+
+    @Query("DELETE FROM note")
+    suspend fun deleteAllNotes()
+
+    @Query("DELETE FROM folder")
+    suspend fun deleteAllFolders()
+
+    @Query("DELETE FROM category")
+    suspend fun deleteAllCategories()
+
+    @Query("DELETE FROM tag")
+    suspend fun deleteAllTags()
+
     @Transaction
     @Query("SELECT * FROM note WHERE id = :noteId LIMIT 1")
     suspend fun getNote(noteId: Long): NoteWithRelations?

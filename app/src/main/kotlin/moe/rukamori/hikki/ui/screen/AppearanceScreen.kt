@@ -374,7 +374,7 @@ private fun Swatch(
     modifier: Modifier = Modifier,
 ) {
     val animated by animateColorAsState(color, MaterialTheme.motionScheme.slowEffectsSpec(), label = "swatch")
-    val shape = remember(polygon) { polygon.toShape() }
+    val shape = polygon.toShape()
     Box(
         modifier =
             modifier

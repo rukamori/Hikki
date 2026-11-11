@@ -124,7 +124,7 @@ private fun DeveloperAvatar(
                 .crossfade(true)
                 .build()
         }
-    val burstShape = remember { MaterialShapes.SoftBurst.toShape() }
+    val burstShape = MaterialShapes.SoftBurst.toShape()
     val entrance = remember { Animatable(0f) }
     val spin = remember { Animatable(0f) }
 

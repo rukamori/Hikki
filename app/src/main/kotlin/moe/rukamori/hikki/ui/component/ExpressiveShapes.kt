@@ -43,7 +43,7 @@ fun ShapedIcon(
     size: Dp = 48.dp,
     iconSize: Dp = 24.dp,
 ) {
-    val shape = remember(polygon) { polygon.toShape() }
+    val shape = polygon.toShape()
     Box(
         modifier =
             modifier
@@ -75,7 +75,7 @@ fun ExpressiveArt(
     LaunchedEffect(Unit) {
         entrance.animateTo(1f, motion.slowSpatialSpec())
     }
-    val shape = remember(polygon) { polygon.toShape() }
+    val shape = polygon.toShape()
     Box(
         modifier =
             modifier

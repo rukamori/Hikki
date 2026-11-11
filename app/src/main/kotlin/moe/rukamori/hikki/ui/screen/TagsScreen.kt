@@ -173,7 +173,7 @@ private fun TagRow(
 ) {
     var menuOpen by remember { mutableStateOf(false) }
     val accent = tagAccentColor(tag.colorSeed)
-    val badgeShape = remember { MaterialShapes.Cookie6Sided.toShape() }
+    val badgeShape = MaterialShapes.Cookie6Sided.toShape()
     Box(modifier) {
         SegmentedListItem(
             onClick = { menuOpen = true },
